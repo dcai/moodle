@@ -1085,7 +1085,8 @@ class core_course_externallib_testcase extends externallib_advanced_testcase {
             array('showdescription' => true, 'completionview' => 1, 'completion' => COMPLETION_TRACKING_AUTOMATIC));
         $forumcompleteautocm = get_coursemodule_from_id('forum', $forumcompleteauto->cmid);
 
-        rebuild_course_cache($course->id, true);
+        course_invalidate_section_cache($DB->get_field('course_sections', 'id', $conditions));
+        rebuild_course_cache($course->id, true, false);
 
         return array($course, $forumcm, $datacm, $pagecm, $labelcm, $urlcm, $forumcompleteautocm);
     }

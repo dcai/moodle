@@ -1948,7 +1948,7 @@ abstract class admin_setting {
         // Some admin settings affect course modinfo
         if ($this->affectsmodinfo) {
             // Clear course cache for all courses
-            rebuild_course_cache(0, true);
+            rebuild_course_cache(0, true, false);
         }
 
         $this->add_to_config_log($name, $oldvalue, $value);
@@ -9321,7 +9321,7 @@ function db_replace($search, $replace, $additionalskiptables = '') {
     }
 
     // delete modinfo caches
-    rebuild_course_cache(0, true);
+    rebuild_course_cache(0, true, false);
 
     // TODO: we should ask all plugins to do the search&replace, for now let's do only blocks...
     $blocks = core_component::get_plugin_list('block');

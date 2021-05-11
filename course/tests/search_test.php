@@ -403,8 +403,7 @@ class course_search_testcase extends advanced_testcase {
                 ['course' => $course->id, 'section' => 1]);
         $DB->set_field('course_sections', 'name', 'Toads',
                 ['course' => $course->id, 'section' => 2]);
-        $DB->set_field('course_sections', 'visible', '0',
-                ['course' => $course->id, 'section' => 2]);
+        set_section_visible($course->id, 2, 0);
 
         // Make the modified time be in order of sections.
         $DB->execute('UPDATE {course_sections} SET timemodified = section');

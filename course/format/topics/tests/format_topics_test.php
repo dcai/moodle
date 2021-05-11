@@ -83,16 +83,17 @@ class format_topics_testcase extends advanced_testcase {
         // Modify section names.
         $customname = "Custom Section";
         foreach ($coursesections as $section) {
-            $section->name = "$customname $section->section";
-            $DB->update_record('course_sections', $section);
+            $sectionname = "$customname $section->section";
+            course_update_section($course->id, $section, ['name' => $sectionname]);
         }
 
         // Requery updated section names then test get_section_name.
         $coursesections = $DB->get_records('course_sections', ['course' => $course->id]);
         $courseformat = course_get_format($course);
         foreach ($coursesections as $section) {
+            $secname = $courseformat->get_section_name($section);
             // Assert that with modified section names, get_section_name returns the modified section name.
-            $this->assertEquals($section->name, $courseformat->get_section_name($section));
+            $this->assertEquals($section->name, $secname);
         }
     }
 

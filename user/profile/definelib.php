@@ -350,7 +350,7 @@ function profile_delete_field($id) {
     // but show the field as missing until manually corrected to something else.
 
     // Need to rebuild course cache to update the info.
-    rebuild_course_cache(0, true);
+    rebuild_course_cache(0, true, false);
 
     // Prior to the delete, pull the record for the event.
     $field = $DB->get_record('user_info_field', array('id' => $id));

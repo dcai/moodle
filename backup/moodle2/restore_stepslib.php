@@ -491,7 +491,7 @@ class restore_gradebook_structure_step extends restore_structure_step {
         $this->gradebook_calculation_freeze();
 
         // Ensure the module cache is current when recalculating grades.
-        rebuild_course_cache($this->get_courseid(), true);
+        rebuild_course_cache($this->get_courseid(), true, false);
 
         // Restore marks items as needing update. Update everything now.
         grade_regrade_final_grades($this->get_courseid());
@@ -800,7 +800,7 @@ class restore_rebuild_course_cache extends restore_execution_step {
         }
 
         // Rebuild cache now that all sections are in place
-        rebuild_course_cache($this->get_courseid());
+        rebuild_course_cache($this->get_courseid(), false, false);
         cache_helper::purge_by_event('changesincourse');
         cache_helper::purge_by_event('changesincoursecat');
     }
@@ -875,7 +875,7 @@ class restore_update_availability extends restore_execution_step {
         // data does not contain any availability information.)
 
         // Get modinfo with all data after resetting cache.
-        rebuild_course_cache($this->get_courseid(), true);
+        rebuild_course_cache($this->get_courseid(), true, false);
         $modinfo = get_fast_modinfo($this->get_courseid());
 
         // Get the date offset for this restore.

@@ -2833,14 +2833,24 @@ function lti_update_type($type, $config) {
         }
         require_once($CFG->libdir.'/modinfolib.php');
         if ($clearcache) {
-            $sql = "SELECT DISTINCT course
-                      FROM {lti}
-                     WHERE typeid = ?";
+            $rs = $DB->get_recordset_sql("SELECT cm.id, cm.course
+                                            FROM {course_modules} cm
+                                            JOIN {modules} m ON cm.module = m.id
+                                           WHERE m.name = :name", ['name' => 'lti']);
 
-            $courses = $DB->get_fieldset_sql($sql, array($type->id));
+            $cmids = [];
+            $courseids = [];
+            foreach ($rs as $record) {
+                $cmids[] = $record->id;
+                $courseids[] = $record->course;
 
-            foreach ($courses as $courseid) {
-                rebuild_course_cache($courseid, true);
+            }
+            $courseids = array_unique($courseids);
+            foreach ($cmids as $cmid) {
+                course_invalidate_module_cache($cmid);
+            }
+            foreach ($courseids as $courseid) {
+                rebuild_course_cache($courseid);
             }
         }
     }

@@ -236,7 +236,7 @@ class core_modinfolib_testcase extends advanced_testcase {
     }
 
     public function test_matching_cacherev() {
-        global $DB, $CFG;
+        global $DB;
 
         $this->resetAfterTest();
         $this->setAdminUser();
@@ -254,7 +254,7 @@ class core_modinfolib_testcase extends advanced_testcase {
         $prevcacherev = $cacherev;
 
         // Reset course cache and make sure cacherev is bumped up but cache is empty.
-        rebuild_course_cache($course->id, true);
+        rebuild_course_cache($course->id, true, false);
         $cacherev = $DB->get_field('course', 'cacherev', array('id' => $course->id));
         $this->assertGreaterThan($prevcacherev, $cacherev);
         $this->assertEmpty($cache->get($course->id));
@@ -310,7 +310,7 @@ class core_modinfolib_testcase extends advanced_testcase {
         $prevcacherev = $cacherev;
 
         // Reset cache for all courses and make sure this course cache is reset.
-        rebuild_course_cache(0, true);
+        rebuild_course_cache(0, true, false);
         $cacherev = $DB->get_field('course', 'cacherev', array('id' => $course->id));
         $this->assertGreaterThan($prevcacherev, $cacherev);
         $this->assertEmpty($cache->get($course->id));
@@ -358,13 +358,20 @@ class core_modinfolib_testcase extends advanced_testcase {
 
         $modinfo = get_fast_modinfo($course->id);
 
-        $this->assertEquals(array($forum0->cmid, $assign0->cmid, $forum1->cmid, $assign1->cmid, $page1->cmid, $page3->cmid),
-                array_keys($modinfo->cms));
+        $this->assertEquals([
+                $forum0->cmid,
+                $assign0->cmid,
+                $forum1->cmid,
+                $assign1->cmid,
+                $page1->cmid,
+                $page3->cmid
+            ],
+            array_keys($modinfo->cms));
         $this->assertEquals($course->id, $modinfo->courseid);
         $this->assertEquals($USER->id, $modinfo->userid);
         $this->assertEquals(array(0 => array($forum0->cmid, $assign0->cmid),
             1 => array($forum1->cmid, $assign1->cmid, $page1->cmid), 3 => array($page3->cmid)), $modinfo->sections);
-        $this->assertEquals(array('forum', 'assign', 'page'), array_keys($modinfo->instances));
+        $this->assertEquals(['page', 'forum', 'assign'], array_keys($modinfo->instances));
         $this->assertEquals(array($assign0->id, $assign1->id), array_keys($modinfo->instances['assign']));
         $this->assertEquals(array($forum0->id, $forum1->id), array_keys($modinfo->instances['forum']));
         $this->assertEquals(array($page1->id, $page3->id), array_keys($modinfo->instances['page']));

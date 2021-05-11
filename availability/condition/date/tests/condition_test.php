@@ -271,6 +271,8 @@ class availability_date_condition_testcase extends advanced_testcase {
         $DB->set_field('course_modules', 'availability',
                 json_encode($complexcondition), array('id' => $page3->cmid));
 
+        rebuild_course_cache($course->id, false, false);
+
         // Now use the update_all_dates function to move date forward 100000.
         condition::update_all_dates($course->id, 100000);
 

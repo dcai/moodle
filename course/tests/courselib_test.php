@@ -841,9 +841,7 @@ class core_course_courselib_testcase extends advanced_testcase {
         $sequence = $DB->get_field('course_sections', 'sequence', array('course' => $course->id, 'section' => 1));
         $this->assertEquals($cmids[0] . ',' . $cmids[1], $sequence);
 
-        // Check that modinfo cache was reset but not rebuilt (important for performance if calling repeatedly).
         $this->assertGreaterThan($coursecacherev, $DB->get_field('course', 'cacherev', array('id' => $course->id)));
-        $this->assertEmpty(cache::make('core', 'coursemodinfo')->get($course->id));
 
         // Add one to section that doesn't exist (this might rebuild modinfo).
         course_add_cm_to_section($course, $cmids[2], 2);
@@ -1095,6 +1093,7 @@ class core_course_courselib_testcase extends advanced_testcase {
 
         // Delete section in the middle (2).
         $this->assertFalse(course_delete_section($course, 2, false));
+        $this->assertEquals(4, course_get_format($course)->get_last_section_number());
         $this->assertTrue(course_delete_section($course, 2, true));
         $this->assertFalse($DB->record_exists('course_modules', array('id' => $assign21->cmid)));
         $this->assertFalse($DB->record_exists('course_modules', array('id' => $assign22->cmid)));
@@ -1314,7 +1313,8 @@ class core_course_courselib_testcase extends advanced_testcase {
      */
     public function check_module_visibility($mod, $visibility, $visibleold) {
         global $DB;
-        $cm = get_fast_modinfo($mod->course)->get_cm($mod->cmid);
+        $fastmodinfo = get_fast_modinfo($mod->course);
+        $cm = $fastmodinfo->get_cm($mod->cmid);
         $this->assertEquals($visibility, $cm->visible);
         $this->assertEquals($visibleold, $cm->visibleold);
 

@@ -79,8 +79,8 @@ class format_weeks_testcase extends advanced_testcase {
         // Modify section names.
         $customname = "Custom Section";
         foreach ($coursesections as $section) {
-            $section->name = "$customname $section->section";
-            $DB->update_record('course_sections', $section);
+            $sectionname = "$customname $section->section";
+            course_update_section($course->id, $section, ['name' => $sectionname]);
         }
 
         // Requery updated section names then test get_section_name.

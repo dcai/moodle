@@ -445,6 +445,9 @@ class info_testcase extends advanced_testcase {
         $DB->set_field('course_modules', 'availability',
                 '{"op":"|","show":true,"c":[{"type":"mock","filter":[' . $u3->id .']}]}',
                 array('id' => $page->cmid));
+
+        course_invalidate_section_cache($section);
+        course_invalidate_module_cache($page->cmid);
         rebuild_course_cache($course->id, true);
         $modinfo = get_fast_modinfo($course);
 

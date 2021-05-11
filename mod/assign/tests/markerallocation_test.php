@@ -75,7 +75,10 @@ class mod_assign_markerallocation_testcase extends advanced_testcase {
 
         $assignelement = $this->getDataGenerator()->create_module('assign', $record, $modulesettings);
 
-        $coursesectionid = course_add_cm_to_section($this->course->id, $assignelement->id, 1);
+        $cm = $DB->get_record('course_modules', array('id' => $assignelement->cmid));
+        $section = $DB->get_record('course_sections',
+                ['course' => $this->course->id, 'section' => 0], '*', IGNORE_MISSING);
+        moveto_module($cm, $section);
 
         // Adding users to the course.
         $userdata = array();
