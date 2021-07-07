@@ -168,6 +168,8 @@ if (core_userfeedback::should_display_reminder()) {
     core_userfeedback::print_reminder_block();
 }
 
+core_welcome::display_welcome_message();
+
 echo $OUTPUT->custom_block_region('content');
 
 echo $OUTPUT->footer();

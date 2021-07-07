@@ -2318,6 +2318,8 @@ class core_course_renderer extends plugin_renderer_base {
             $frontpagelayout = $CFG->frontpage;
         }
 
+        core_welcome::display_welcome_message();
+
         foreach (explode(',', $frontpagelayout) as $v) {
             switch ($v) {
                 // Display the main part of the front page.
