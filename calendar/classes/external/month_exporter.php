@@ -66,6 +66,11 @@ class month_exporter extends exporter {
     protected $includenavigation = true;
 
     /**
+     * @var int $limitdayevents limit number of events per day.
+     */
+    protected $limitdayevents = 0;
+
+    /**
      * @var bool $initialeventsloaded Whether the events have been loaded for this month.
      */
     protected $initialeventsloaded = true;
@@ -159,6 +164,10 @@ class month_exporter extends exporter {
             'includenavigation' => [
                 'type' => PARAM_BOOL,
                 'default' => true,
+            ],
+            'limitdayevents' => [
+                'type' => PARAM_INT,
+                'default' => 0,
             ],
             // Tracks whether the first set of events have been loaded and provided
             // to the exporter.
@@ -254,6 +263,7 @@ class month_exporter extends exporter {
             'larrow' => $output->larrow(),
             'rarrow' => $output->rarrow(),
             'includenavigation' => $this->includenavigation,
+            'limitdayevents' => $this->limitdayevents,
             'initialeventsloaded' => $this->initialeventsloaded,
             'calendarinstanceid' => $this->calendarinstanceid,
             'showviewselector' => $viewmode === 'month',
@@ -334,12 +344,14 @@ class month_exporter extends exporter {
         $daysinfirstweek = $daysinweek - $prepadding;
         $days = array_slice($alldays, 0, $daysinfirstweek);
         $week = new week_exporter($this->calendar, $days, $prepadding, ($daysinweek - count($days) - $prepadding), $this->related);
+        $week->set_limitdayevents($this->limitdayevents);
         $weeks[] = $week->export($output);
 
         // Now chunk up the remaining day. and turn them into weeks.
         $daychunks = array_chunk(array_slice($alldays, $daysinfirstweek), $daysinweek);
         foreach ($daychunks as $days) {
             $week = new week_exporter($this->calendar, $days, 0, ($daysinweek - count($days)), $this->related);
+            $week->set_limitdayevents($this->limitdayevents);
             $weeks[] = $week->export($output);
         }
 
@@ -427,6 +439,18 @@ class month_exporter extends exporter {
      */
     public function set_includenavigation($include) {
         $this->includenavigation = $include;
+
+        return $this;
+    }
+
+    /**
+     * Limit number of events per day.
+     *
+     * @param  int $limit
+     * @return $this
+     */
+    public function set_limitdayevents(int $limit): self {
+        $this->limitdayevents = $limit;
 
         return $this;
     }

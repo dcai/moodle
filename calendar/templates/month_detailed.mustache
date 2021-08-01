@@ -33,6 +33,7 @@
 }}
 <div{{!
     }} class="calendarwrapper"{{!
+    }} data-limitdayevents="{{limitdayevents}}"{{!
     }}{{#courseid}} data-courseid="{{courseid}}"{{/courseid}}{{!
     }}{{#categoryid}} data-categoryid="{{categoryid}}"{{/categoryid}}{{!
     }} data-context-id="{{defaulteventcontext}}"{{!
@@ -120,6 +121,18 @@
                                             </li>
                                         {{/underway}}
                                         {{/events}}
+                                        {{#hasmoreevents}}
+                                        <li>
+                                            <strong>
+                                                <a data-action="view-day-link" href="#" class="aalink day" aria-label="{{viewdaylinktitle}}"
+                                                   data-year="{{date.year}}" data-month="{{date.mon}}" data-day="{{mday}}"
+                                                   data-courseid="{{courseid}}" data-categoryid="{{categoryid}}"
+                                                   data-timestamp="{{timestamp}}">
+                                                   {{#str}} moreevents, calendar, {{hasmoreevents}} {{/str}}
+                                                </a>
+                                            </strong>
+                                        </li>
+                                        {{/hasmoreevents}}
                                     </ul>
                                 </div>
                             {{/hasevents}}

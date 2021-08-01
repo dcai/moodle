@@ -147,11 +147,12 @@ $calendar->add_sidecalendar_blocks($renderer, true, $view);
 
 echo $OUTPUT->header();
 echo $renderer->start_layout();
-echo html_writer::start_tag('div', array('class'=>'heightcontainer'));
+echo html_writer::start_tag('div', [
+    'class' => 'heightcontainer',
+    'data-limitdayevents' => CALENDAR_LIMIT_DAY_EVENTS
+]);
 
-
-
-list($data, $template) = calendar_get_view($calendar, $view, true, false, $lookahead);
+list($data, $template) = calendar_get_view($calendar, $view, true, false, $lookahead, CALENDAR_LIMIT_DAY_EVENTS);
 echo $renderer->render_from_template($template, $data);
 
 echo html_writer::end_tag('div');

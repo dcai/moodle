@@ -13191,7 +13191,8 @@ body.dragging .dragging {
       margin: 0;
       padding: 0; }
       .maincalendar .calendarmonth ul li {
-        list-style-type: none; }
+        list-style-type: none;
+        line-height: 1em; }
         .maincalendar .calendarmonth ul li > a {
           overflow: hidden;
           text-overflow: ellipsis;
@@ -13202,6 +13203,10 @@ body.dragging .dragging {
             text-decoration: none; }
             .maincalendar .calendarmonth ul li > a:hover .eventname {
               text-decoration: underline; }
+        .maincalendar .calendarmonth ul li a[data-action="view-day-link"] {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap; }
         .maincalendar .calendarmonth ul li .icon {
           margin-left: 0.25em;
           margin-right: 0.25em;
@@ -13231,7 +13236,7 @@ body.dragging .dragging {
             background-color: #ced4da;
             border: 2px solid #687889; }
     .maincalendar .calendarmonth td {
-      height: 5em; }
+      height: 9em; }
     .maincalendar .calendarmonth .clickable:hover {
       box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12); }
   .maincalendar .controls {

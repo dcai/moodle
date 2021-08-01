@@ -88,7 +88,11 @@ class week_day_exporter extends day_exporter {
             ],
             'daytitle' => [
                 'type' => PARAM_RAW,
-            ]
+            ],
+            'hasmoreevents' => [
+                'type' => PARAM_INT,
+                'default' => 0,
+            ],
         ]);
 
         return $return;

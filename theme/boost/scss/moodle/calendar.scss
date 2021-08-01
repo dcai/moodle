@@ -152,6 +152,7 @@ $calendarEventColor: #0d5ca1 !default;
 
             li {
                 list-style-type: none;
+                line-height: 1em;
 
                 > a {
                     @include text-truncate;
@@ -165,6 +166,10 @@ $calendarEventColor: #0d5ca1 !default;
                             text-decoration: $link-hover-decoration;
                         }
                     }
+                }
+
+                a[data-action="view-day-link"] {
+                    @include text-truncate;
                 }
 
                 .icon {
@@ -213,7 +218,7 @@ $calendarEventColor: #0d5ca1 !default;
         }
 
         td {
-            height: 5em;
+            height: 9em;
         }
 
         .clickable:hover {

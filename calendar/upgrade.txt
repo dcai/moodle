@@ -5,6 +5,8 @@ information provided here is intended especially for developers.
 * The following external functions now accepts an optional parameter 'searchvalue' to search the events:
   - core_calendar_external::get_calendar_action_events_by_timesort
   - core_calendar_external::get_calendar_action_events_by_courses
+* `core_calendar_get_calendar_monthly_view` web service accepts an optional parameter `limitdayevents` to limit the number of
+  events returned per day.
 
 === 3.10 ===
 * The core_calendar\local\event\value_objects\times_interface class now has new method get_usermidnight_time() which

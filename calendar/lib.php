@@ -151,6 +151,11 @@ define('CALENDAR_EVENT_TYPE_STANDARD', 0);
 define('CALENDAR_EVENT_TYPE_ACTION', 1);
 
 /**
+ * CALENDAR_LIMIT_DAY_EVENTS - default number of events to be shown per day.
+ */
+define('CALENDAR_LIMIT_DAY_EVENTS', 5);
+
+/**
  * Manage calendar events.
  *
  * This class provides the required functionality in order to manage calendar events.
@@ -3394,10 +3399,11 @@ function calendar_get_legacy_events($tstart, $tend, $users, $groups, $courses,
  * @param   bool    $includenavigation Whether to include navigation
  * @param   bool    $skipevents Whether to load the events or not
  * @param   int     $lookahead Overwrites site and users's lookahead setting.
+ * @param   int     $limitdayevents limit number of events per day, 0 is unlimited.
  * @return  array[array, string]
  */
 function calendar_get_view(\calendar_information $calendar, $view, $includenavigation = true, bool $skipevents = false,
-        ?int $lookahead = null) {
+        ?int $lookahead = null, int $limitdayevents = 0) {
     global $PAGE, $CFG;
 
     $renderer = $PAGE->get_renderer('core_calendar');
@@ -3519,6 +3525,7 @@ function calendar_get_view(\calendar_information $calendar, $view, $includenavig
         $month = new \core_calendar\external\month_exporter($calendar, $type, $related);
         $month->set_includenavigation($includenavigation);
         $month->set_initialeventsloaded(!$skipevents);
+        $month->set_limitdayevents($limitdayevents);
         $month->set_showcoursefilter(($view == "month" || $view == "monthblock"));
         $data = $month->export($renderer);
     } else if ($view == "day") {
@@ -3526,10 +3533,12 @@ function calendar_get_view(\calendar_information $calendar, $view, $includenavig
         $data = $day->export($renderer);
         $data->viewingday = true;
         $data->showviewselector = true;
+        $data->limitdayevents = $limitdayevents;
         $template = 'core_calendar/calendar_day';
     } else if ($view == "upcoming" || $view == "upcoming_mini") {
         $upcoming = new \core_calendar\external\calendar_upcoming_exporter($calendar, $related);
         $data = $upcoming->export($renderer);
+        $data->limitdayevents = $limitdayevents;
 
         if ($view == "upcoming") {
             $template = 'core_calendar/calendar_upcoming';

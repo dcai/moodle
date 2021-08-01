@@ -40,6 +40,9 @@ import Pending from 'core/pending';
  */
 const registerEventListeners = (root) => {
     root = $(root);
+    const container = root.parent();
+    const limitdayevents = container.data('limitdayevents');
+    console.info('aaaaaaaaaaaaa root', limitdayevents, root);
 
     // Bind click events to event links.
     root.on('click', CalendarSelectors.links.eventLink, (e) => {
@@ -84,7 +87,9 @@ const registerEventListeners = (root) => {
         const link = e.currentTarget;
 
         if (view === 'month' || view === 'monthblock') {
-            changeMonth(root, link.href, link.dataset.year, link.dataset.month, courseId, categoryId, link.dataset.day);
+            console.info('aaaaaa change month onclick', limitdayevents);
+            changeMonth(root, link.href, link.dataset.year, link.dataset.month, courseId, categoryId,
+                link.dataset.day, limitdayevents);
             e.preventDefault();
         } else if (view === 'day') {
             changeDay(root, link.href, link.dataset.year, link.dataset.month, link.dataset.day, courseId, categoryId);
@@ -112,7 +117,8 @@ const registerEventListeners = (root) => {
                 categoryId = option.dataset.categoryid;
 
             if (view == 'month') {
-                refreshMonthContent(root, year, month, courseId, categoryId, root, 'core_calendar/calendar_month', day)
+                refreshMonthContent(root, year, month, courseId, categoryId, root, 'core_calendar/calendar_month',
+                    day, limitdayevents)
                     .then(() => {
                         updateUrl('?view=month');
                     }).fail(Notification.exception);
@@ -142,9 +148,11 @@ const registerEventListeners = (root) => {
  * @param {object} target The element being replaced. If not specified, the calendarwrapper is used.
  * @param {string} template The template to be rendered.
  * @param {number} day Day (optional)
+ * @param {number} limitdayevents limit day events
  * @return {promise}
  */
-export const refreshMonthContent = (root, year, month, courseId, categoryId, target = null, template = '', day = 1) => {
+export const refreshMonthContent = (root, year, month, courseId, categoryId, target = null,
+        template = '', day = 1, limitdayevents = 0) => {
     startLoading(root);
 
     target = target || root.find(CalendarSelectors.wrapper);
@@ -153,7 +161,8 @@ export const refreshMonthContent = (root, year, month, courseId, categoryId, tar
     const includenavigation = root.data('includenavigation');
     const mini = root.data('mini');
     const viewMode = target.data('view');
-    return CalendarRepository.getCalendarMonthData(year, month, courseId, categoryId, includenavigation, mini, day, viewMode)
+    return CalendarRepository.getCalendarMonthData(year, month, courseId, categoryId, includenavigation,
+            mini, day, viewMode, limitdayevents)
         .then(context => {
             return Templates.render(template, context);
         })
@@ -181,10 +190,11 @@ export const refreshMonthContent = (root, year, month, courseId, categoryId, tar
  * @param {number} courseId The id of the course whose events are shown
  * @param {number} categoryId The id of the category whose events are shown
  * @param {number} day Day (optional)
+ * @param {number} limitdayevents limit number of day events
  * @return {promise}
  */
-export const changeMonth = (root, url, year, month, courseId, categoryId, day = 1) => {
-    return refreshMonthContent(root, year, month, courseId, categoryId, null, '', day)
+export const changeMonth = (root, url, year, month, courseId, categoryId, day = 1, limitdayevents = 0) => {
+    return refreshMonthContent(root, year, month, courseId, categoryId, null, '', day, limitdayevents)
         .then((...args) => {
             if (url.length && url !== '#') {
                 updateUrl(url);
@@ -209,11 +219,13 @@ export const reloadCurrentMonth = (root, courseId = 0, categoryId = 0) => {
     const year = root.find(CalendarSelectors.wrapper).data('year');
     const month = root.find(CalendarSelectors.wrapper).data('month');
     const day = root.find(CalendarSelectors.wrapper).data('day');
+    const container = root.parent();
+    const limitdayevents = container.data('limitdayevents');
 
     courseId = courseId || root.find(CalendarSelectors.wrapper).data('courseid');
     categoryId = categoryId || root.find(CalendarSelectors.wrapper).data('categoryid');
 
-    return refreshMonthContent(root, year, month, courseId, categoryId, null, '', day);
+    return refreshMonthContent(root, year, month, courseId, categoryId, null, '', day, limitdayevents);
 };
 
 

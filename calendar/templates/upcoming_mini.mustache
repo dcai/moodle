@@ -72,6 +72,7 @@ require([
     var root = $('#month-upcoming-mini-{{uniqid}}');
 
     $('body').on(CalendarEvents.filterChanged, function(e, data) {
+    console.info('aaaaaaaaaaaaaa', e, data);
         M.util.js_pending("month-upcoming-mini-{{uniqid}}-filterChanged");
 
         // A filter value has been changed.

@@ -143,6 +143,11 @@
                                             {{{popupname}}}
                                         </div>
                                     {{/events}}
+                                    {{#hasmoreevents}}
+                                        <strong>
+                                            {{#str}} moreevents, calendar, {{hasmoreevents}} {{/str}}
+                                        </strong>
+                                    {{/hasmoreevents}}
                                 {{/content}}
                             {{/ core_calendar/minicalendar_day_link }}
                         {{/popovertitle}}{{!
@@ -171,6 +176,7 @@ require([
 ) {
 
     $('body').on(CalendarEvents.filterChanged, function(e, data) {
+    console.info('aaaaaaaaaaaaaaaa filter changed');
         M.util.js_pending("month-mini-{{uniqid}}-filterChanged");
         // A filter value has been changed.
         // Find all matching cells in the popover data, and hide them.

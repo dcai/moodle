@@ -49,6 +49,11 @@ class week_exporter extends exporter {
     protected $prepadding = 0;
 
     /**
+     * @var int $limitdayevents limit number of events per day.
+     */
+    protected $limitdayevents = 0;
+
+    /**
      * @var int $postpadding The number of post-padding days at the start of the week.
      */
     protected $postpadding = 0;
@@ -148,10 +153,18 @@ class week_exporter extends exporter {
                 $events[] = $event;
             }
 
+            $eventscount = count($events);
+            $hasmoreevents = 0;
+            if ($eventscount > $this->limitdayevents && $this->limitdayevents != 0) {
+                $events = array_slice($events, 0, $this->limitdayevents - 1);
+                $hasmoreevents = $eventscount - $this->limitdayevents + 1;
+            }
+
             $istoday = true;
             $istoday = $istoday && $today['year'] == $daydata['year'];
             $istoday = $istoday && $today['yday'] == $daydata['yday'];
             $daydata['istoday'] = $istoday;
+            $daydata['hasmoreevents'] = $hasmoreevents;
 
             $daydata['isweekend'] = !!($weekend & (1 << ($daydata['wday'] % $numberofdaysinweek)));
 
@@ -165,6 +178,18 @@ class week_exporter extends exporter {
         }
 
         return $return;
+    }
+
+    /**
+     * Limit number of events per day.
+     *
+     * @param  int $limit
+     * @return $this
+     */
+    public function set_limitdayevents(int $limit): self {
+        $this->limitdayevents = $limit;
+
+        return $this;
     }
 
     /**

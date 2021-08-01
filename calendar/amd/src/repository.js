@@ -93,9 +93,11 @@ export const submitCreateUpdateForm = (formData) => {
  * @param {boolean} mini Whether the month is in mini view.
  * @param {number} day Day (optional)
  * @param {string} view The calendar view mode.
+ * @param {number} limitdayevents limit number of events per day.
  * @return {promise} Resolved with the month view data.
  */
-export const getCalendarMonthData = (year, month, courseId, categoryId, includeNavigation, mini, day = 1, view = 'month') => {
+export const getCalendarMonthData = (year, month, courseId, categoryId, includeNavigation, mini,
+        day = 1, view = 'month', limitdayevents = 0) => {
     const request = {
         methodname: 'core_calendar_get_calendar_monthly_view',
         args: {
@@ -104,6 +106,7 @@ export const getCalendarMonthData = (year, month, courseId, categoryId, includeN
             courseid: courseId,
             categoryid: categoryId,
             includenavigation: includeNavigation,
+            limitdayevents,
             mini,
             day,
             view,

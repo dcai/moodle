@@ -138,6 +138,10 @@ class day_exporter extends exporter {
                 'type' => PARAM_BOOL,
                 'default' => false,
             ],
+            'hasmoreevents' => [
+                'type' => PARAM_INT,
+                'default' => 0,
+            ],
             'calendareventtypes' => [
                 'type' => PARAM_RAW,
                 'multiple' => true,
