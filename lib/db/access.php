@@ -96,6 +96,17 @@ $capabilities = array(
         )
     ),
 
+    'moodle/site:searcheverything' => array(
+
+        'riskbitmask' => RISK_PERSONAL,
+
+        'captype' => 'read',
+        'contextlevel' => CONTEXT_SYSTEM,
+        'archetypes' => array(
+            'manager' => CAP_ALLOW
+        )
+    ),
+
     'moodle/site:deleteanymessage' => array(
 
         'riskbitmask' => RISK_DATALOSS,

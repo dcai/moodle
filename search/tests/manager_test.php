@@ -1023,9 +1023,8 @@ class search_manager_testcase extends advanced_testcase {
         $this->setUser($user3);
         $accessinfo = $search->get_areas_user_accesses();
 
-        // Nothing is restricted and no groups are relevant.
-        $this->assertEquals([], $accessinfo->separategroupscontexts);
-        $this->assertEquals([], $accessinfo->usergroups);
+        // manager could search everything
+        $this->assertEquals(true, $accessinfo->everything);
     }
 
     /**

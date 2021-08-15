@@ -664,10 +664,13 @@ class manager {
      */
     protected function get_areas_user_accesses($limitcourseids = false, $limitcontextids = false) {
         global $DB, $USER;
+        $systemcontext = \context_system::instance();
+
+        $cansearcheverything = has_capability('moodle/site:searcheverything', $systemcontext);
 
         // All results for admins (unless they have chosen to limit results). Eventually we could
         // add a new capability for managers.
-        if (is_siteadmin() && !$limitcourseids && !$limitcontextids) {
+        if (($cansearcheverything || is_siteadmin()) && !$limitcourseids && !$limitcontextids) {
             return (object)array('everything' => true);
         }
 
@@ -696,7 +699,7 @@ class manager {
             // the access control as we can not automate much, we can not even check guest access as some areas might
             // want to allow guests to retrieve data from them.
 
-            $systemcontextid = \context_system::instance()->id;
+            $systemcontextid = $systemcontext->id;
             if (!$limitcontextids || in_array($systemcontextid, $limitcontextids)) {
                 foreach ($areasbylevel[CONTEXT_SYSTEM] as $areaid => $searchclass) {
                     $areascontexts[$areaid][$systemcontextid] = $systemcontextid;
